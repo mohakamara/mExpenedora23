@@ -26,15 +26,28 @@ public class Application {
             mostrarMenu();
             opcio = sc.nextInt();
             switch (opcio) {
-                case 1:
-                    mostrarMaquina();break;
-                case 2:comprarProducte();break;
+                case 1: mostrarMaquina();break;
+                case 2: comprarProducte();break;
 
-                case 11:
-                    afegirProducte();break;
+                case 10: mostrarInventari();break;
+                case 11: afegirProducte();break;
+                case 12: modificarMaquina();break;
+                case 13: mostrarBenefici();break;
+
+                case -1: System.out.println("Adeu");
+                default: System.out.println("Opcio incorrecte");
             }
         } while (opcio != -1);
 
+    }
+
+    private static void mostrarBenefici() {
+    }
+
+    private static void modificarMaquina() {
+    }
+
+    private static void mostrarInventari() {
     }
 
     private static void comprarProducte() {
@@ -86,9 +99,6 @@ try {
                     System.out.println(slot.get(i).getPosicio() + "                " + llistaProductes.get(i).getNom() + "                " + slot.get(i).getQuantitat());
                 }
             }
-
-
-
         }
     }
 
