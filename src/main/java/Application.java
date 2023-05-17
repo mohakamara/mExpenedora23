@@ -19,7 +19,6 @@ public class Application {
 
     public static void main(String[] args) throws SQLException {
 
-
         // Producte p=new Producte("poma1","Poma","Poma Bona",0.8f,1.2f);
         //producteDAO.createProducte(p);
         int opcio = 0;
