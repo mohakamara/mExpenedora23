@@ -13,6 +13,7 @@ public class SlotDAO_MySql implements SlotDAO {
     private static final String DB_PWD="";
     private static final String Mostrar_Slot ="SELECT *from slot";
     private static final String Instertar_Slot="INSERT INTO slot VALUES(?,?,?,?,?)";
+    private static final String Update_Slot= "UPDATE slot SET Quantitat=Quantitat-1 WHERE Posicio=?";
 
     private Connection conn =null;
 
@@ -59,6 +60,10 @@ public class SlotDAO_MySql implements SlotDAO {
 
     @Override
     public void update(Slot p) throws SQLException {
+        PreparedStatement ps=conn.prepareStatement(Update_Slot);
+        ps.setInt(1,p.getQuantitat());
+        ps.setInt(2,p.getPosicio());
+        int rowCount=ps.executeUpdate();
 
     }
 
