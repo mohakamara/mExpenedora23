@@ -29,11 +29,16 @@ public class Application {
             switch (opcio) {
                 case 1:
                     mostrarMaquina();break;
+                case 2:comprarProducte();break;
+
                 case 11:
                     afegirProducte();break;
             }
         } while (opcio != -1);
 
+    }
+
+    private static void comprarProducte() {
     }
 
     private static void afegirProducte() throws SQLException {
@@ -50,8 +55,18 @@ public class Application {
         System.out.println("Introdueix el preu de venta del  producte que vols entrar");
         float preuVenta=sc.nextFloat();
         Producte producte = new Producte(codi,nom,descripcio,preuCompra,preuVenta);
-        producteDAO.createProducte(producte);
 
+try {
+    producteDAO.createProducte(producte);
+    ArrayList<Producte> llistaProductes = producteDAO.readProductes();
+    for (Producte prod:llistaProducte)
+    {
+        System.out.println(prod);
+    }
+}catch (SQLException e){
+    e.printStackTrace();
+    System.out.println(e.getErrorCode());
+}
 
 
     }
