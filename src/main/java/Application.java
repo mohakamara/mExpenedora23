@@ -75,7 +75,7 @@ public class Application {
                 System.out.println("Has comprat un " + slots.get(i).getCodi_producte());
                 mostrarMaquina();
             } else {
-                System.out.println("No hi ha cap producte en aquesta posicio");
+                System.out.println("No hi ha cap producte en aquesta posicio hola");
             }
 
 
