@@ -13,7 +13,6 @@ import java.util.SortedMap;
 public class Application {
     static ProducteDAO producteDAO = new ProducteDAO_MySQL();
     static SlotDAO slotDAO = new SlotDAO_MySql();
-
     static Scanner sc = new Scanner(System.in);
     static ArrayList<Producte> llistaProducte = new ArrayList<>();
     static ArrayList<Slot> slots = new ArrayList<>();
@@ -57,39 +56,83 @@ public class Application {
     }
 
     private static void mostrarBenefici() {
+        float benefici = 0;
+        try {
+            ArrayList<Slot> slots = (ArrayList<Slot>) slotDAO.readSlots();
+            for (Slot slot : slots) {
+                Producte producte = producteDAO.readProducte(slot.getCodi_producte());
+                benefici += (producte.getPreuVenta() - producte.getPreuCompra()) * slot.getQuantitat();
+            }
+            System.out.println("El benefici es de " + benefici);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    private static void modificarMaquina() {
+    private static void modificarMaquina() throws SQLException {
+        int opcio = sc.nextInt();
+        switch (opcio) {
+            case 1:
+                modificarPosicio();
+                break;
+            case 2:
+                modificarStock();
+                break;
+            case 3:
+                afegirRanures();
+                break;
+            default:
+                System.out.println("Opcio incorrecte");
+        }
+
+    }
+    private static void afegirRanures() throws SQLException {
+        System.out.println("Introdueix la posicio on vols afegir ranures");
+        int posicio = sc.nextInt();
+        System.out.println("Introdueix el numero de ranures que vols afegir");
+        int ranures = sc.nextInt();
+        Slot slot = slotDAO.readSlot(posicio);
+        slot.setQuantitat(slot.getQuantitat() + ranures);
+    }
+
+    private static void modificarStock() {
+
+    }
+
+    private static void modificarPosicio() {
     }
 
     private static void mostrarInventari() {
+        try {
+            ArrayList<Producte> productes = (ArrayList<Producte>) producteDAO.readProductes();
+            for (Producte p : productes) {
+                System.out.println(p);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void comprarProducte() throws SQLException {
-        mostrarMaquina();
-        System.out.println("Introdueix la posicio del producte que vols comprar");
+        System.out.println("Introdueix la posicio del producte que vols comprar?");
         int posicio = sc.nextInt();
-        for (int i = 0; i < slots.size(); i++) {
-            if (posicio == slots.get(i).getPosicio() || posicio < slots.get(i).getPosicio()) {
-                slotDAO.update(slots.get(i));
-                System.out.println("Has comprat un " + slots.get(i).getCodi_producte());
-                mostrarMaquina();
-            } else {
-                System.out.println("No hi ha cap producte en aquesta posicio hola");
-            }
-
-
+        Slot slot = slotDAO.readSlot(posicio);
+        if (slot.getQuantitat() > 0) {
+            slot.setQuantitat(slot.getQuantitat() - 1);
+            slotDAO.update(slot);
+            System.out.println("Has comprat un producte");
+        } else {
+            System.out.println("No hi ha productes");
         }
-
     }
 
     private static void afegirProducte() throws SQLException {
         System.out.println("Introdueix el codi del producte que vols entrar?");
-        String codi = sc.nextLine();
+        String codi = sc.next();
         System.out.println("Introdueix el nom del producte que vols entrar");
-        String nom = sc.nextLine();
+        String nom = sc.next();
         System.out.println("Introdueix la descripcio del producte que vols entrar");
-        String descripcio = sc.nextLine();
+        String descripcio = sc.next();
 
         System.out.println("Introdueix el preu de compra producte que vols entrar");
         float preuCompra = sc.nextFloat();
@@ -97,7 +140,14 @@ public class Application {
         System.out.println("Introdueix el preu de venta del  producte que vols entrar");
         float preuVenta = sc.nextFloat();
         Producte producte = new Producte(codi, nom, descripcio, preuCompra, preuVenta);
+        llistaProducte.add(producte);
 
+        System.out.println("Introdueix posicio del producte que vols entrar");
+        int posicio = sc.nextInt();
+        System.out.println("Introdueix quantitat del producte que vols entrar");
+        int quantitat = sc.nextInt();
+        Slot slot = new Slot(posicio, quantitat, codi);
+        slots.add(slot);
 
         try {
             producteDAO.createProducte(producte);
@@ -105,12 +155,16 @@ public class Application {
             for (Producte prod : llistaProducte) {
                 System.out.println(prod);
             }
-        } catch (SQLException e) {
+            slotDAO.createSlot(slot);
+            ArrayList<Slot> slots = slotDAO.readSlots();
+            for (Slot slot1 : slots) {
+                System.out.println(slot1);
+            }
+
+            }catch (SQLException e) {
             e.printStackTrace();
             System.out.println(e.getErrorCode());
         }
-
-
     }
 
     private static void mostrarMaquina() throws SQLException {
@@ -129,7 +183,6 @@ public class Application {
 
                     System.out.print("_____________Producte");
                     System.out.println( "                " + llistaProductes.get(j).getNom());
-
                 }
             }
 
