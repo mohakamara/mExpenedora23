@@ -58,6 +58,15 @@ public class Application {
     }
 
     private static void mostrarBenefici() {
+        double benefici = 0;
+        for (Slot slot : slots) {
+            for (Producte producte : llistaProducte) {
+                if (slot.getCodi_producte().equals(producte.getCodi_Producte())) {
+                    benefici += (producte.getPreuVenta() - producte.getPreuCompra()) * slot.getQuantitat();
+                }
+            }
+            System.out.println("El benefici es de: " + benefici + "€");
+        }
     }
 
     /**
@@ -149,12 +158,14 @@ public class Application {
         System.out.println("Introdueix el preu de venta del producte: ");
         float preuVenta = sc.nextFloat();
         Producte p = new Producte(codi, nom, descripcio, preu, preuVenta);
+        llistaProducte.add(p);
 
         System.out.println("Introdueix la posicio del producte: ");
         int posicio = sc.nextInt();
         System.out.println("Introdueix la quantitat del producte: ");
         int quantitat = sc.nextInt();
         Slot s = new Slot(posicio, quantitat, codi);
+        slots.add(s);
 
 
         try {
@@ -198,7 +209,6 @@ public class Application {
 
                 }
             }
-
         }
     }
 
