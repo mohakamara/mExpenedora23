@@ -8,12 +8,10 @@ import model.Slot;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.SortedMap;
 
 public class Application {
     static ProducteDAO producteDAO = new ProducteDAO_MySQL();
     static SlotDAO slotDAO = new SlotDAO_MySql();
-
     static Scanner sc = new Scanner(System.in);
     static ArrayList<Producte> llistaProducte = new ArrayList<>();
     static ArrayList<Slot> slots = new ArrayList<>();
@@ -35,7 +33,6 @@ public class Application {
                 case 2:
                     comprarProducte();
                     break;
-
                 case 10:
                     mostrarInventari();
                     break;
@@ -57,20 +54,32 @@ public class Application {
         } while (opcio != -1);
     }
 
+    /**
+     * Aqui tenim el metode de mostrarBen
+     */
     private static void mostrarBenefici() {
-        double benefici = 0;
-        for (Slot slot : slots) {
-            for (Producte producte : llistaProducte) {
-                if (slot.getCodi_producte().equals(producte.getCodi_Producte())) {
-                    benefici += (producte.getPreuVenta() - producte.getPreuCompra()) * slot.getQuantitat();
+
+        try {
+            ArrayList<Slot> slots = slotDAO.readSlots();
+            ArrayList<Producte> llistaProductes = producteDAO.readProductes();
+
+            double benefici = 0;
+            for (Slot slot : slots) {
+                for (Producte producte : llistaProductes) {
+                    if (slot.getCodi_producte().equals(producte.getCodi_Producte())) {
+                        benefici += (producte.getPreuVenta() - producte.getPreuCompra()) * slot.getQuantitat();
+                    }
                 }
             }
-            System.out.println("El benefici es de: " + benefici + "€");
+
+        }catch (Exception e){
+            System.out.println("No hi ha cap benefici");
         }
+
     }
 
     /**
-     * Aqui tenim el metodode de modificar la maquina on modifiquem el stock dels productes
+     * Aqui tenim el metodode de modificar la maquina on modifiquem el stock dels productes*
      *
      * @throws SQLException
      */
@@ -103,8 +112,13 @@ public class Application {
      * Aqui tenim el metode de MostrarInventari on mostrem tots els productes que tenim a la maquina
      */
     private static void mostrarInventari() {
-        for (Producte prod : llistaProducte) {
-            System.out.println(prod);
+        try {
+            ArrayList<Producte> productes = producteDAO.readProductes();
+            for (Producte producte : productes) {
+                System.out.println(producte);
+            }
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
 
     }
