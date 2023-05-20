@@ -20,7 +20,7 @@ public class Application {
 
     public static void main(String[] args) throws SQLException {
 
-     Scanner lector=new Scanner(System.in);
+        Scanner lector = new Scanner(System.in);
         int opcio = 0;
         do {
             mostrarMenu();
@@ -63,10 +63,10 @@ public class Application {
         String nomSel = sc.nextLine();
 
         int stock;
-        for (Producte producte : llistaProducte){
-            if (producte.getNom().equals(nomSel)){
-                for (Slot slot : slots){
-                    if (slot.getCodi_producte().equals(producte.getCodi_Producte())){
+        for (Producte producte : llistaProducte) {
+            if (producte.getNom().equals(nomSel)) {
+                for (Slot slot : slots) {
+                    if (slot.getCodi_producte().equals(producte.getCodi_Producte())) {
                         stock = slot.getQuantitat();
 
                         System.out.println();
@@ -84,8 +84,7 @@ public class Application {
     }
 
     private static void mostrarInventari() {
-        for (Producte prod:llistaProducte)
-        {
+        for (Producte prod : llistaProducte) {
             System.out.println(prod);
         }
 
@@ -93,24 +92,32 @@ public class Application {
 
     private static void comprarProducte() throws SQLException {
         mostrarMaquina();
-        System.out.println("Introdueix el nom del producte que vols comprar");
-        String producteComprar= sc.next();
+        try {
+            ArrayList<Slot> slots = slotDAO.readSlots();
+            ArrayList<Producte> productes = producteDAO.readProductes();
 
-       for (Producte producte:llistaProducte){
-           if (producteComprar.equals(producte.getNom())){
-               for (Slot slot:slots){
-                   if (slot.getCodi_producte().equals(producte.getCodi_Producte())){
-                       slot.setQuantitat(slot.getQuantitat()-1);
-                       slotDAO.updateSlot(slot);
-                       System.out.println("Producte comprat!!!");
+            System.out.println("Introdueix la posicio que vols comprar");
+            int posicioSel = sc.nextInt();
 
+            for (Slot slot : slots) {
+                if (slot.getPosicio() == posicioSel) {
+                    if (slot.getQuantitat() < 1) {
+                        System.out.println("NO hi ha  stock!!");
+                    } else {
+                        slot.setQuantitat(slot.getQuantitat()-1);
 
-                   }
-               }
-           }
-       }
-
+                        slotDAO.updateSlot(slot);
+                        System.out.println("Producte comprat!!");
+                    }
+                }
+            }
+        }catch (SQLException throwables){
+            throwables.printStackTrace();
+        }
     }
+
+
+
 
     private static void afegirProducte() throws SQLException {
         Producte p=new Producte();
