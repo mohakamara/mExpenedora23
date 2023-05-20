@@ -18,8 +18,11 @@ public class Application {
     static ArrayList<Producte> llistaProducte = new ArrayList<>();
     static ArrayList<Slot> slots = new ArrayList<>();
 
-    public static void main(String[] args) throws SQLException {
 
+    public static void main(String[] args) throws SQLException {
+        /**
+         * Aqui tenim els switchs per a poder fer les diferents opcions del menu
+         */
         Scanner lector = new Scanner(System.in);
         int opcio = 0;
         do {
@@ -52,12 +55,16 @@ public class Application {
                     System.out.println("Opcio incorrecte");
             }
         } while (opcio != -1);
-
     }
 
     private static void mostrarBenefici() {
     }
 
+    /**
+     * Aqui tenim el metodode de modificar la maquina on modifiquem el stock dels productes
+     *
+     * @throws SQLException
+     */
     private static void modificarMaquina() throws SQLException {
         System.out.print("Introdueix el nom del producte que vols modificar l'stock: ");
         String nomSel = sc.nextLine();
@@ -83,6 +90,9 @@ public class Application {
         }
     }
 
+    /**
+     * Aqui tenim el metode de MostrarInventari on mostrem tots els productes que tenim a la maquina
+     */
     private static void mostrarInventari() {
         for (Producte prod : llistaProducte) {
             System.out.println(prod);
@@ -90,6 +100,11 @@ public class Application {
 
     }
 
+    /**
+     * Aqui tenim el metode de comprar producte on comprem el producte que volem
+     *
+     * @throws SQLException
+     */
     private static void comprarProducte() throws SQLException {
         mostrarMaquina();
         try {
@@ -104,36 +119,42 @@ public class Application {
                     if (slot.getQuantitat() < 1) {
                         System.out.println("NO hi ha  stock!!");
                     } else {
-                        slot.setQuantitat(slot.getQuantitat()-1);
+                        slot.setQuantitat(slot.getQuantitat() - 1);
 
                         slotDAO.updateSlot(slot);
                         System.out.println("Producte comprat!!");
                     }
                 }
             }
-        }catch (SQLException throwables){
+        } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
 
-
-
+    /**
+     * Aqui tenim el metodde de afegir producte on afegim un producte a la maquina i l'slot
+     *
+     * @throws SQLException
+     */
     private static void afegirProducte() throws SQLException {
-        Producte p=new Producte();
+        System.out.println("Introdueix el codi del producte: ");
+        String codi = sc.nextLine();
+        System.out.println("Introdueix el nom del producte: ");
+        String nom = sc.nextLine();
+        System.out.println("Introdueix la descripcio del producte: ");
+        String descripcio = sc.nextLine();
+        System.out.println("Introdueix el preu del producte: ");
+        float preu = sc.nextFloat();
+        System.out.println("Introdueix el preu de venta del producte: ");
+        float preuVenta = sc.nextFloat();
+        Producte p = new Producte(codi, nom, descripcio, preu, preuVenta);
 
-        Scanner lector=new Scanner(System.in);
-        System.out.println("Introdueix el codi del producte que vols entrar?");
-        p.setCodi_Producte(lector.next());
-        System.out.println("Introdueix el nom del producte que vols entrar");
-        p.setNom(lector.next());
-        System.out.println("Introdueix la descripcio del producte que vols entrar");
-        p.setDescripcio(lector.next());
-        System.out.println("Introdueix el preu de compra producte que vols entrar");
-        p.setPreuCompra(lector.nextFloat());
-        System.out.println("Introdueix el preu de venta del  producte que vols entrar");
-        p.setPreuVenta(lector.nextFloat());
-        ;
+        System.out.println("Introdueix la posicio del producte: ");
+        int posicio = sc.nextInt();
+        System.out.println("Introdueix la quantitat del producte: ");
+        int quantitat = sc.nextInt();
+        Slot s = new Slot(posicio, quantitat, codi);
 
 
         try {
@@ -142,14 +163,22 @@ public class Application {
             for (Producte prod : llistaProducte) {
                 System.out.println(prod);
             }
+            slotDAO.createSlot(s);
+            ArrayList<Slot> slots = slotDAO.readSlots();
+            for (Slot slot : slots) {
+                System.out.println(slot);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println(e.getErrorCode());
         }
-
-
     }
 
+    /**
+     * Aqui tenim el mostrar maquina on mostrem la maquina amb els seus productes i els slots
+     *
+     * @throws SQLException
+     */
     private static void mostrarMaquina() throws SQLException {
 
         ArrayList<Producte> llistaProductes = producteDAO.readProductes();
@@ -157,15 +186,15 @@ public class Application {
 
 
         for (int i = 0; i < slot.size(); i++) {
-            System.out.print("Posicio " +slot.get(i).getPosicio()+"_____________" + "Quantitat "+slot.get(i).getQuantitat());
+            System.out.print("Posicio " + slot.get(i).getPosicio() + "_____________" + "Quantitat " + slot.get(i).getQuantitat());
 
-            for (int j=0;j<llistaProductes.size();j++){
+            for (int j = 0; j < llistaProductes.size(); j++) {
 
 
-                if (slot.get(i).getCodi_producte().equals(llistaProductes.get(j).getCodi_Producte())){
+                if (slot.get(i).getCodi_producte().equals(llistaProductes.get(j).getCodi_Producte())) {
 
                     System.out.print("_____________Producte");
-                    System.out.println( "                " + llistaProductes.get(j).getNom());
+                    System.out.println("                " + llistaProductes.get(j).getNom());
 
                 }
             }
@@ -173,6 +202,9 @@ public class Application {
         }
     }
 
+    /**
+     * Aqui tenim el metode de mostrar menu on mostrem el menu de la maquina
+     */
     private static void mostrarMenu() {
         System.out.println("\nMenú de la màquina expenedora");
         System.out.println("=============================");
