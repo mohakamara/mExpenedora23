@@ -1,5 +1,6 @@
 package daos;
 
+import model.Producte;
 import model.Slot;
 
 import java.sql.*;
@@ -11,10 +12,8 @@ public class SlotDAO_MySql implements SlotDAO {
     private static final String DB_USER="root";
     private static final String DB_PWD="";
     private static final String Mostrar_Slot ="SELECT *from slot";
-    private static final String Instertar_Slot="INSERT INTO slot VALUES(?,?,?)";
-    private static final String Update_Slot= "UPDATE slot SET Quantitat=Quantitat-1 WHERE Posicio=?";
-
-
+    private static final String Instertar_Slot="INSERT INTO slot VALUES(?,?,?,?,?)";
+    private static final String Update_Slot= "UPDATE slot SET Quantitat= WHERE codi_producte=?";
 
     private Connection conn =null;
 
@@ -34,16 +33,12 @@ public class SlotDAO_MySql implements SlotDAO {
 
     @Override
     public void createSlot(Slot p) throws SQLException {
-        PreparedStatement ps=conn.prepareStatement(Instertar_Slot);
-        ps.setInt(1,p.getPosicio());
-        ps.setInt(2,p.getQuantitat());
-        ps.setString(3,p.getCodi_producte());
-        ps.executeUpdate();
+
     }
 
     @Override
     public Slot readSlot(int posicio) throws SQLException {
-            return null;
+        return null;
     }
 
 
@@ -65,12 +60,6 @@ public class SlotDAO_MySql implements SlotDAO {
         return slots;
     }
 
-    @Override
-    public void update(Slot p) throws SQLException {
-        PreparedStatement ps=conn.prepareStatement(Update_Slot);
-        ps.setInt(1,p.getQuantitat());
-        int rowCount=ps.executeUpdate();
-    }
 
     @Override
     public void deleteSlot(Slot p) throws SQLException {
@@ -84,6 +73,15 @@ public class SlotDAO_MySql implements SlotDAO {
 
     @Override
     public void updateSlot(Slot p) throws SQLException {
+        PreparedStatement ps=conn.prepareStatement(Update_Slot);
+        ps.setInt(1,p.getPosicio());
+        ps.setString(3,p.getCodi_producte());
+
+
+      int rowCount=ps.executeUpdate();
+
 
     }
+
+
 }

@@ -67,6 +67,7 @@ public class ProducteDAO_MySQL implements  ProducteDAO{
     @Override
     public void update(Producte p) throws SQLException {
 
+
     }
 
     @Override
