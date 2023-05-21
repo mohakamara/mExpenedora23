@@ -45,7 +45,6 @@ public class Application {
                 case 13:
                     mostrarBenefici();
                     break;
-
                 case -1:
                     System.out.println("Adeu");
                 default:
@@ -70,6 +69,7 @@ public class Application {
                         benefici += (producte.getPreuVenta() - producte.getPreuCompra()) * slot.getQuantitat();
                     }
                 }
+                System.out.println("El benefici es de: " + benefici + "€");
             }
 
         }catch (Exception e){
