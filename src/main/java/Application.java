@@ -47,6 +47,7 @@ public class Application {
                     break;
                 case -1:
                     System.out.println("Adeu");
+                    break;
                 default:
                     System.out.println("Opcio incorrecte");
             }
@@ -84,26 +85,20 @@ public class Application {
      * @throws SQLException
      */
     private static void modificarMaquina() throws SQLException {
-        System.out.print("Introdueix el nom del producte que vols modificar l'stock: ");
-        String nomSel = sc.nextLine();
+        ArrayList<Slot> slots = slotDAO.readSlots();
+        ArrayList<Producte> llistaProductes = producteDAO.readProductes();
 
-        int stock;
-        for (Producte producte : llistaProducte) {
-            if (producte.getNom().equals(nomSel)) {
-                for (Slot slot : slots) {
-                    if (slot.getCodi_producte().equals(producte.getCodi_Producte())) {
-                        stock = slot.getQuantitat();
+        //modiciar quantitat de el producte per la posicio
+        System.out.println("Introdueix la posicio que vols modificar");
+        int posicioSel = sc.nextInt();
 
-                        System.out.println();
-                        System.out.print("Introdueix el nou stock: ");
-                        int stockNou = sc.nextInt();
-
-                        slot.setQuantitat(stockNou);
-
-                        slotDAO.updateSlot(slot);
-
-                    }
-                }
+        for (Slot slot : slots) {
+            if (slot.getPosicio() == posicioSel) {
+                System.out.println("Introdueix la nova quantitat");
+                int quantitat = sc.nextInt();
+                slot.setQuantitat(quantitat);
+                slotDAO.updateSlot(slot);
+                System.out.println("Quantitat modificada");
             }
         }
     }

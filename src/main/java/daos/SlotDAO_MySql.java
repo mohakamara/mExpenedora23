@@ -81,8 +81,6 @@ public class SlotDAO_MySql implements SlotDAO {
         ps.setInt(1, p.getPosicio());
         ps.setInt(2, p.getQuantitat());
 
-
-
         int rowCount = ps.executeUpdate();
 
     }
